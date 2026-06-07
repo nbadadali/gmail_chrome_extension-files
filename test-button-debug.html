@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-button {
+            background: #0f172a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .test-button:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+        .log-area {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Button Debug Test</h1>
+    
+    <div class="test-container">
+        <h3>Test 1: Basic Button Click</h3>
+        <button class="test-button" onclick="testBasicClick()">Test Basic Click</button>
+        <button class="test-button" id="test-add-event">Test Add Event Listener</button>
+    </div>
+    
+    <div class="test-container">
+        <h3>Test 2: Simulate Table Button</h3>
+        <button class="test-button" onclick="createTableButton()">Create Table Button</button>
+        <div id="table-container"></div>
+    </div>
+    
+    <div class="test-container">
+        <h3>Test 3: Window Open Test</h3>
+        <button class="test-button" onclick="testWindowOpen()">Test Window Open</button>
+    </div>
+    
+    <div class="test-container">
+        <h3>Debug Log</h3>
+        <div id="debug-log" class="log-area"></div>
+        <button class="test-button" onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <script>
+        // Debug logging function
+        function log(message) {
+            const logArea = document.getElementById('debug-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logArea.textContent += `[${timestamp}] ${message}\n`;
+            logArea.scrollTop = logArea.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('debug-log').textContent = '';
+        }
+
+        // Test 1: Basic button functionality
+        function testBasicClick() {
+            log('Basic button clicked successfully');
+        }
+
+        // Test 1b: Add event listener
+        document.getElementById('test-add-event').addEventListener('click', function(e) {
+            log('Event listener button clicked successfully');
+            e.preventDefault();
+        });
+
+        // Test 2: Simulate table button creation
+        function createTableButton() {
+            log('Creating table button...');
+            
+            const container = document.getElementById('table-container');
+            container.innerHTML = '';
+            
+            const viewFullBtn = document.createElement('button');
+            viewFullBtn.textContent = '📋 View Full Summary';
+            viewFullBtn.className = 'test-button';
+            viewFullBtn.id = 'view-full-summary-btn';
+            
+            // Add both onclick and addEventListener for better compatibility
+            viewFullBtn.onclick = () => {
+                log('View Full Summary button clicked (onclick)');
+                testOpenFullTable();
+            };
+            
+            viewFullBtn.addEventListener('click', (e) => {
+                log('View Full Summary button clicked (addEventListener)');
+                e.preventDefault();
+                e.stopPropagation();
+                testOpenFullTable();
+            });
+            
+            container.appendChild(viewFullBtn);
+            log('Table button created and added to DOM');
+            
+            // Verify button was added
+            const addedButton = container.querySelector('#view-full-summary-btn');
+            log(`Button verification: buttonFound=${!!addedButton}, buttonText="${addedButton?.textContent}"`);
+        }
+
+        // Test 3: Window open functionality
+        function testWindowOpen() {
+            log('Testing window.open...');
+            
+            try {
+                const testWindow = window.open('', '_blank');
+                
+                if (!testWindow) {
+                    log('ERROR: Failed to open new window - popup blocked?');
+                    alert('Failed to open new window. Please allow popups for this site.');
+                    return;
+                }
+                
+                testWindow.document.write(`
+                    <html>
+                        <head><title>Test Window</title></head>
+                        <body>
+                            <h1>Test Window Opened Successfully!</h1>
+                            <p>This window was opened from the test page.</p>
+                            <button onclick="window.close()">Close Window</button>
+                        </body>
+                    </html>
+                `);
+                testWindow.document.close();
+                
+                log('SUCCESS: Test window opened successfully');
+                
+            } catch (error) {
+                log(`ERROR: Error opening test window: ${error.message}`);
+            }
+        }
+
+        // Simulate the openFullTable function
+        function testOpenFullTable() {
+            log('Simulating openFullTable function...');
+            
+            try {
+                const mockEmailData = {
+                    high_priority_emails: [
+                        { subject: "Test Email", sender: "test@example.com" }
+                    ]
+                };
+                
+                log(`Email data: ${JSON.stringify(mockEmailData)}`);
+                testWindowOpen();
+                
+            } catch (error) {
+                log(`ERROR in testOpenFullTable: ${error.message}`);
+            }
+        }
+
+        // Initialize
+        log('Button debug test page loaded');
+        log('Click the buttons above to test functionality');
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "Sa.AI Gmail Assistant",
+  "version": "2.0",
+  "description": "AI-powered Gmail assistant with n8n integration for inbox summarization and task management",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabs",
+    "windows",
+    "identity"
+  ],
+
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "https://www.googleapis.com/*",
+    "https://dxb2025.app.n8n.cloud/*",
+    "https://accounts.google.com/*"
+  ],
+  "oauth2": {
+    "client_id": "1051004706176-ptln0d7v8t83qu0s5vf7v4q4dagfcn4q.apps.googleusercontent.com",
+    "scopes": [
+      "email",
+      "profile",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.send",
+      "https://www.googleapis.com/auth/gmail.labels",
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "openid"
+    ]
+  },
+  "externally_connectable": {
+    "matches": ["https://cmmjlngjamdemediohghdbinocakjkfj.chromiumapp.org/*"]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Sa.AI Gmail Assistant"
+  },
+  "icons": {
+    "16": "Icons/icon16.png",
+    "48": "Icons/icon48.png",
+    "128": "Icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["content.js", "styles.css"],
+      "matches": ["https://mail.google.com/*"]
+  }
+  ]
+}
