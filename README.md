@@ -1,16 +1,21 @@
 # Sa.AI Gmail Assistant
 
-An AI-powered Chrome extension that adds a smart sidebar to Gmail, letting you chat with an AI assistant about your inbox, summarize emails by priority, and manage your email workflow — all without leaving Gmail.
+Most inboxes show you emails. Yours shows you problems — the missed task, the forgotten thread, the reply you never got to.
+
+Sa.AI is a Chrome extension that lives inside Gmail as a sidebar. It summarizes your inbox, extracts tasks, drafts replies, and answers questions about your emails — so you always know what matters and what needs your attention.
 
 ## Features
 
-- **Gmail Sidebar**: A 400px sidebar that slides in alongside Gmail, keeping your inbox fully visible
-- **Google OAuth**: Secure sign-in with your Google account — no passwords stored
-- **AI Chat Interface**: Ask questions about your inbox and get instant, context-aware replies
-- **Inbox Summarization**: Categorizes your emails by priority and surfaces what matters most
+- **Inbox Summary**: Opens with a clear summary of what actually matters in your inbox — no more scanning through everything manually
+- **Task Extraction**: Pulls tasks buried inside email threads and turns them into a prioritized to-do list, kept up to date automatically
+- **AI Chat**: Ask anything about your inbox, the web, or your day and get instant, context-aware answers
+- **Voice Mode**: Switch to voice instead of typing — talk to your assistant naturally
+- **Thread Summarization**: Get the key points of any long email thread in seconds, without scrolling through it
+- **Draft Replies**: Ask the assistant to draft a reply and get a first version ready to send
+- **Auto-Labeling**: Quietly labels and organizes incoming emails in the background — your inbox stays tidy without you touching a thing
 - **Modern UI**: Glassmorphism design with smooth animations, built to feel native inside Gmail
-- **SPA Compatibility**: Works seamlessly as you navigate between Gmail views (Inbox, Sent, Labels, etc.)
 - **Session Persistence**: Stays connected across browser sessions — sign in once and you're set
+- **SPA Compatibility**: Works seamlessly as you navigate between Gmail views (Inbox, Sent, Labels, etc.)
 
 ## Tech Stack
 
@@ -39,25 +44,28 @@ An AI-powered Chrome extension that adds a smart sidebar to Gmail, letting you c
 ### Using the Assistant
 1. Open Gmail at [mail.google.com](https://mail.google.com)
 2. The Sa.AI sidebar appears on the right side of the page
-3. Type a message and press **Enter** or click **Send**
-4. Try asking:
+3. Your inbox summary loads automatically — tasks, priorities, and key threads
+4. Type a message or switch to **voice mode** to ask questions
+5. Try asking:
    - *"Summarize my inbox"*
-   - *"What emails need my attention today?"*
-   - *"Find emails from [sender name]"*
+   - *"What tasks do I have today?"*
+   - *"Draft a reply to [sender]"*
+   - *"What did [sender] say about the project?"*
 
 ### Sidebar Controls
 - **× button**: Closes the sidebar and restores Gmail to full width
 - **Chat input**: Auto-focuses when the sidebar opens, ready to type immediately
+- **Voice mode**: Switch from typing to speaking with your assistant
 
 ## How It Works
 
 The extension is built around three components that communicate via Chrome's messaging API:
 
 1. **Popup** (`popup.js`): Handles the Google OAuth sign-in flow and shows your connection status
-2. **Background script** (`background.js`): Manages OAuth tokens, forwards chat messages to n8n, and handles responses
-3. **Content script** (`content.js`): Injects the sidebar into Gmail and manages the chat UI
+2. **Background script** (`background.js`): Manages OAuth tokens, forwards requests to n8n, and handles responses
+3. **Content script** (`content.js`): Injects the sidebar into Gmail and manages the full chat and task UI
 
-When you send a message, the content script passes it to the background script, which makes an authenticated request to the n8n webhook. n8n processes the request using AI and returns a response that appears in your sidebar.
+When you open Gmail, the content script injects the sidebar and loads your inbox summary via n8n. When you send a message or request a task list, the background script makes an authenticated request to the n8n webhook, which processes it using AI and returns the response to your sidebar.
 
 ### n8n Webhooks
 
